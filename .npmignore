@@ -1,0 +1,6 @@
+src/
+tsconfig.json
+*.test.tsx
+*.test.ts
+*.stories.tsx
+.git/
