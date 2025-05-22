@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApiImage } from '@/types/media-server';
+import { ApiImage } from '../../types/media';
 interface GalleryProps {
     images: ApiImage[];
     className?: string;

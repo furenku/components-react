@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
 import useMeasure from "react-use-measure";
-import { ImageContainer } from './ImageContainer';
+import { ImageContainer } from '../ImageContainer/ImageContainer';
 // Tailwind breakpoints (adjust if your config differs)
 const BREAKPOINTS = {
     xs: 0,
