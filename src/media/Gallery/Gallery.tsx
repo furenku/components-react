@@ -172,7 +172,7 @@ export const Gallery: React.FC<GalleryProps> = ({
       <div className="flex flex-col md:flex-row h-full">
         {/* Main Image */}
         { main && (
-            <div className="main-image w-full grow-[7] md:grow-[6] xl:flex-1 md:h-full cursor-pointer" onClick={() => openLightbox(0)}
+            <div className="main-image w-full grow-[7] md:grow-[3] xl:flex-1 md:h-full cursor-pointer" onClick={() => openLightbox(0)}
             ref={mainImageRef}
             >
               {
@@ -190,14 +190,13 @@ export const Gallery: React.FC<GalleryProps> = ({
             
           </div>
         )}
-
         {/* Thumbnails Area */}
         {/* Only render this div if there are actually thumbs to show */}
         {visibleThumbs.length > 0 && (
           // Note: The grid classes define layout structure, not the number of items.
           // This will show *up to* 2, 4, or 6 items within the defined grid.
           // The layout might look sparse on larger screens if few images are provided.
-          <div className="flex grow-[3] md:grow-[4] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-2 lg:grid-cols-2 xl:grid-cols-3 overflow-hidden">
+          <div className="flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-2 lg:grid-cols-2 xl:grid-cols-3 overflow-hidden">
             {visibleThumbs.map((img, i) => (
               // Calculate the correct original index for the lightbox
               // The index `i` is relative to `visibleThumbs`, but we need the index within the full `images` array
