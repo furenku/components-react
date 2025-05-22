@@ -19,7 +19,9 @@
     "build": "tsc",
     "prepublishOnly": "bun run build",
     "prepare": "husky",
-    "postinstall": "bun run build"
+    "postinstall": "bun run build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "husky": "^9.1.7"
