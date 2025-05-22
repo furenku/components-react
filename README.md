@@ -1,20 +1,29 @@
 # React Components
 
 - Test
+- Video
+- ImageContainer
+- Gallery
 
-# dev
+## dev
 
 ### install
-
+```
 bun i
-bun run build
+```
 
-# Usage
+Build is performed on pre-commit hook using husky.
+
+
+## Usage
+
+### Install
 
 ```sh
-# Use GitHub SSH syntax
-npm install git@github.com:user/my-components.git
+bun install https://github.com/furenku/components-react.git
+```
 
-# Or with specific branch/tag
-npm install git@github.com:user/my-components.git#v1.2.0
+### Updating
+```sh
+bun update components-react
 ```
