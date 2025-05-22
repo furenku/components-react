@@ -1,8 +1,9 @@
+import React from 'react';
 import { ApiImage } from '../../types/media';
-interface Props {
+interface GalleryProps {
     images: ApiImage[];
     className?: string;
 }
-export declare const Gallery: ({ images, className, }: Props) => import("react/jsx-runtime").JSX.Element;
+export declare const Gallery: React.FC<GalleryProps>;
 export {};
 //# sourceMappingURL=Gallery.d.ts.map
