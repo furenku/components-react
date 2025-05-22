@@ -13,12 +13,15 @@ const BREAKPOINTS = {
 };
 const getVisibleThumbCount = (width) => {
     if (width >= BREAKPOINTS.xl) {
-        return 6; // xl: 6 thumbs
+        return 6;
     }
     else if (width >= BREAKPOINTS.lg) {
-        return 4; // lg: 4 thumbs
+        return 4;
     }
-    return 2; // default: 2 thumbs
+    else if (width >= BREAKPOINTS.md) {
+        return 3;
+    }
+    return 2;
 };
 const getBreakpoint = (width) => {
     let bp = 'xs';
