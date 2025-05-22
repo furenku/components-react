@@ -172,7 +172,7 @@ export const Gallery: React.FC<GalleryProps> = ({
       <div className="flex flex-col md:flex-row h-full">
         {/* Main Image */}
         { main && (
-            <div className="main-image flex-1 w-full md:w-[60%] xl:w-[50%] h-[66%] md:h-full cursor-pointer" onClick={() => openLightbox(0)}
+            <div className="main-image grow w-full md:w-[60%] xl:w-[50%] h-[66%] md:h-full cursor-pointer" onClick={() => openLightbox(0)}
             ref={mainImageRef}
             >
               {
@@ -197,7 +197,7 @@ export const Gallery: React.FC<GalleryProps> = ({
           // Note: The grid classes define layout structure, not the number of items.
           // This will show *up to* 2, 4, or 6 items within the defined grid.
           // The layout might look sparse on larger screens if few images are provided.
-          <div className="flex flex-1 md:grid md:grid-cols-1 md:grid-rows-2 lg:grid-cols-2 xl:grid-cols-3 overflow-hidden">
+          <div className="flex shrink md:grid md:grid-cols-1 md:grid-rows-2 lg:grid-cols-2 xl:grid-cols-3 overflow-hidden">
             {visibleThumbs.map((img, i) => (
               // Calculate the correct original index for the lightbox
               // The index `i` is relative to `visibleThumbs`, but we need the index within the full `images` array
