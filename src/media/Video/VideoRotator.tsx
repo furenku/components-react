@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Video } from '@/components/Video/Video';
+import { Video } from './Video';
 
 interface VideoRotatorProps {
   videos: Array<{
