@@ -16,7 +16,8 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "bun run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "bun run build"
   },
   "dependencies": {
     "husky": "^9.1.7"
