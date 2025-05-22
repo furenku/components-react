@@ -172,7 +172,7 @@ export const Gallery: React.FC<GalleryProps> = ({
       <div className="flex flex-col md:flex-row h-full">
         {/* Main Image */}
         { main && (
-            <div className="main-image w-full grow-[7] md:grow-[3] xl:flex-1 md:h-full cursor-pointer" onClick={() => openLightbox(0)}
+            <div className="main-image xs:w-full grow-[7] md:grow-[3] xl:flex-1 md:h-full cursor-pointer" onClick={() => openLightbox(0)}
             ref={mainImageRef}
             >
               {
