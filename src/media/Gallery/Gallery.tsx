@@ -57,7 +57,7 @@ const pickImageSize = (img:
 };
 
 
-const Gallery: React.FC<GalleryProps> = ({
+export const Gallery: React.FC<GalleryProps> = ({
   images,
   className = '',
 }) => {
@@ -261,5 +261,3 @@ const Gallery: React.FC<GalleryProps> = ({
     </div>
   );
 };
-
-export default Gallery;
