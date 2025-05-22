@@ -41,7 +41,7 @@ export const ImageContainer = ({
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
       <motion.div
-        className={`relative w-full h-full overflow-hidden ${className}`} // Apply className here
+        className={`relative w-full h-full items-center justify-center overflow-hidden ${className}`} // Apply className here
         initial={{ opacity: 0.6 }}
         animate={{ opacity: isLoaded ? 1 : 0.6 }}
         transition={{ duration: 0.4 }}

@@ -16,6 +16,6 @@ export const ImageContainer = ({ src, alt, width, height, blurDataURL, objectFit
     else {
         dimensions.fill = true;
     }
-    return (_jsx("div", { className: `relative w-full h-full overflow-hidden ${className}`, children: _jsx(motion.div, { className: `relative w-full h-full overflow-hidden ${className}`, initial: { opacity: 0.6 }, animate: { opacity: isLoaded ? 1 : 0.6 }, transition: { duration: 0.4 }, children: _jsx(Image, { src: src, alt: alt, loading: priority ? undefined : "lazy", priority: priority, placeholder: blurDataURL ? 'blur' : 'empty', blurDataURL: blurDataURL, onLoadingComplete: () => setIsLoaded(true), style: { objectFit }, ...dimensions }) }) }));
+    return (_jsx("div", { className: `relative w-full h-full overflow-hidden ${className}`, children: _jsx(motion.div, { className: `relative w-full h-full items-center justify-center overflow-hidden ${className}`, initial: { opacity: 0.6 }, animate: { opacity: isLoaded ? 1 : 0.6 }, transition: { duration: 0.4 }, children: _jsx(Image, { src: src, alt: alt, loading: priority ? undefined : "lazy", priority: priority, placeholder: blurDataURL ? 'blur' : 'empty', blurDataURL: blurDataURL, onLoadingComplete: () => setIsLoaded(true), style: { objectFit }, ...dimensions }) }) }));
 };
 //# sourceMappingURL=ImageContainer.js.map
