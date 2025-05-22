@@ -8,7 +8,7 @@ import { ImageContainer } from '../ImageContainer/ImageContainer';
 
 
 
-interface GalleryProps {
+interface Props {
   images: ApiImage[];
   className?: string;
 }
@@ -57,10 +57,10 @@ const pickImageSize = (img:
 };
 
 
-export const Gallery: React.FC<GalleryProps> = ({
+export const Gallery = ({
   images,
   className = '',
-}) => {
+}: Props) => {
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
