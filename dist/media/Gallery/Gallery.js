@@ -1,5 +1,5 @@
 "use client";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
 import useMeasure from "react-use-measure";
 import { ImageContainer } from '../ImageContainer/ImageContainer';
@@ -47,6 +47,9 @@ export const Gallery = ({ images, className = '', }) => {
     let mainBreakpoint = undefined;
     if (width) {
         mainBreakpoint = getBreakpoint(width * 1.25);
+    }
+    if (!Array.isArray(images)) {
+        return (_jsx(_Fragment, { children: "No Images" }));
     }
     // Effect to update visible thumb count on resize
     useEffect(() => {

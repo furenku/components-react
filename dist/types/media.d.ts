@@ -1,4 +1,4 @@
-export type Breakpoint = 'preview' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ImageSize = {
     src: string;
     width: number;

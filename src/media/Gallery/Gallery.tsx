@@ -80,6 +80,12 @@ export const Gallery: React.FC<GalleryProps> = ({
     mainBreakpoint = getBreakpoint(width * 1.25);
   }
 
+  if( ! Array.isArray( images ) ) {
+    return (
+      <>No Images</>
+    )
+  }
+
   
 
 
