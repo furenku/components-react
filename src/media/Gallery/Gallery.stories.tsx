@@ -1,3 +1,5 @@
+import React from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react';
 import { Gallery } from './Gallery';
 import { ApiImage } from '../../types/media';
@@ -8,7 +10,7 @@ const meta: Meta<typeof Gallery> = {
   title: 'Media/Gallery',
   component: Gallery,
   parameters: {
-    layout: 'padded',
+    layout: 'centered',
     docs: {
       description: {
         component: 'A images gallery component that displays a collection of images and videos with navigation controls.',
@@ -37,6 +39,11 @@ export const Default: Story = {
   args: {
     images
   },
+  render: (args) => (
+    <div style={{ width: '15rem', height: '10rem', position: 'relative', padding: 0, margin: 0 }}>
+      <Gallery images={images}/>
+    </div>
+  ),
 };
 
 export const EmptyGallery: Story = {

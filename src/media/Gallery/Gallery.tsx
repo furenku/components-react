@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import useMeasure from "react-use-measure";
-import { ApiImage, Breakpoint, ImageSize } from '../../types/media';
+import { ApiImage, Breakpoint } from '../../types/media';
 import { ImageContainer } from '../ImageContainer/ImageContainer';
+import { pickImageSize } from '../utils';
 
 
 
@@ -45,16 +46,6 @@ const getBreakpoint = (width: number): Breakpoint => {
   });
 
   return bp;
-
-};
-
-const pickImageSize = (img: 
-  ApiImage, bp: Breakpoint): ImageSize | undefined => {
-      
-
-  if( ! img.sizes || ! img.sizes[bp] ) return
-      
-  return img.sizes[bp];
 
 };
 
@@ -176,7 +167,7 @@ export const Gallery: React.FC<GalleryProps> = ({
 
 
   return (
-    <div className={`w-full h-full ${className}`}>
+    <div className={`Gallery w-full h-full ${className}`}>
       <div className="flex flex-col md:flex-row h-full">
         {/* Main Image */}
         { main && (
@@ -198,16 +189,13 @@ export const Gallery: React.FC<GalleryProps> = ({
             
           </div>
         )}
-        {/* Thumbnails Area */}
-        {/* Only render this div if there are actually thumbs to show */}
+
+        {/* Thumbnails */}
         {visibleThumbs.length > 0 && (
-          // Note: The grid classes define layout structure, not the number of items.
-          // This will show *up to* 2, 4, or 6 items within the defined grid.
-          // The layout might look sparse on larger screens if few images are provided.
+          
           <div className="flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-3 lg:grid-rows-2 xl:grid-cols-2  overflow-hidden">
             {visibleThumbs.map((img, i) => (
-              // Calculate the correct original index for the lightbox
-              // The index `i` is relative to `visibleThumbs`, but we need the index within the full `images` array
+
               <div className="flex-1 h-full cursor-pointer" key={i} onClick={() => openLightbox(i + 1)}>
                 <ImageContainer
                     src={

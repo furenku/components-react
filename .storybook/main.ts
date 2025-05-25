@@ -5,7 +5,8 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    '@storybook/addon-webpack5-compiler-swc', // Ensure this is included
+    '@storybook/addon-a11y',
+    '@storybook/addon-webpack5-compiler-swc'
   ],
   framework: {
     name: '@storybook/nextjs',
@@ -20,6 +21,9 @@ const config: StorybookConfig = {
       propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
     },
   },
+  features: {
+    viewportStoryGlobals: true
+  }
 };
 
 export default config;
