@@ -133,8 +133,8 @@ export const Gallery: React.FC<GalleryProps> = ({
   const main = actualImages[0];
 
   return (
-    <div className={`Gallery w-full h-full ${className}`} ref={containerRef}>
-      <div className="flex flex-col md:flex-row h-full">
+    <div className={`Gallery flex w-full h-full ${className}`} ref={containerRef}>
+      <div className="w-full h-full flex flex-col md:flex-row ">
         {/* Main Image */}
         {main && (
           <div 
