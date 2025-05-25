@@ -10,7 +10,7 @@ const meta: Meta<typeof Gallery> = {
   title: 'Media/Gallery',
   component: Gallery,
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component: 'A images gallery component that displays a collection of images and videos with navigation controls.',
@@ -40,14 +40,44 @@ export const Default: Story = {
     images
   },
   render: (args) => (
-    <div style={{ width: '15rem', height: '10rem', position: 'relative', padding: 0, margin: 0 }}>
-      <Gallery images={images}/>
+    <div style={{ 
+      width: '100%', 
+      height: '100%',      
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        padding: 0,
+        boxSizing: 'border-box',
+        overflow: 'hidden'
+      }}>
+       <Gallery images={images}/>
+      </div>
     </div>
   ),
 };
 
 export const EmptyGallery: Story = {
   args: {
-    image: [],
+    images: [], // Fixed typo: was "image"
   },
+  render: (args) => (
+    <div style={{ 
+      width: '100%', 
+      height: '100vh', 
+      minHeight: '20rem',
+      position: 'relative', 
+      padding: 0, 
+      margin: 0 
+    }}>
+      <Gallery images={args.images}/>
+    </div>
+  ),
 };
