@@ -8,8 +8,8 @@ export type Dimensions = {
     width: number;
     height: number;
 };
-export interface ApiImage extends Dimensions {
-    id: number | string;
+export interface Image extends Dimensions {
+    name: string;
     src: string;
     alt: string;
     caption: string;
@@ -17,8 +17,9 @@ export interface ApiImage extends Dimensions {
         [key in Breakpoint]: ImageSize;
     };
     preview: string;
-    filename: string;
+}
+export interface ApiImage extends Image {
+    id: number | string;
     created_at: string;
-    path?: string;
 }
 //# sourceMappingURL=media.d.ts.map
