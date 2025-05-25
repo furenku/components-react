@@ -1,7 +1,11 @@
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 
-export type ImageSize = { src: string; width: number; height: number };
+export type ImageSize = {
+  src: string;
+  width: number;
+  height: number
+};
 
 
 export type Dimensions = {
