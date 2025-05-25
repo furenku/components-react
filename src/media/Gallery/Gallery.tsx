@@ -6,9 +6,6 @@ import { ApiImage, Breakpoint } from '../../types/media';
 import { ImageContainer } from '../ImageContainer/ImageContainer';
 import { pickImageSize } from '../utils';
 
-
-
-
 interface GalleryProps {
   images: ApiImage[];
   className?: string;
@@ -34,66 +31,51 @@ const getVisibleThumbCount = (width: number): number => {
   return 2;
 };
 
-
 const getBreakpoint = (width: number): Breakpoint => {
-
   let bp: Breakpoint = 'xs';
-
   Object.entries(BREAKPOINTS).forEach(([key, value]) => {
     if (width >= value) {
       bp = key as Breakpoint;
     }
   });
-
   return bp;
-
 };
-
 
 export const Gallery: React.FC<GalleryProps> = ({
   images,
   className = '',
 }) => {
-
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [actualImages, setActualImages] = useState<
-  ApiImage[]>([]);
-  const [visibleThumbCount, setVisibleThumbCount] = useState(2); // Default count
+  const [actualImages, setActualImages] = useState<ApiImage[]>([]);
 
-  const [mainImageRef, bounds] = useMeasure();
+  // Use useMeasure for both container and main image
+  const [containerRef, containerBounds] = useMeasure();
+  const [mainImageRef, mainImageBounds] = useMeasure();
 
-  const width = bounds.width;
+  // Get dimensions from container bounds
+  const containerWidth = containerBounds.width;
+  const mainImageWidth = mainImageBounds.width;
 
-  let mainBreakpoint: Breakpoint | undefined = undefined;
+  useEffect(()=>{
+    console.log(
+      containerWidth, containerBounds.height
+    );
+    
+  })
 
-  if (width) {
-    mainBreakpoint = getBreakpoint(width * 1.25);
-  }
-
-  if( ! Array.isArray( images ) ) {
-    return (
-      <>No Images</>
-    )
-  }
-
+  // Calculate breakpoints and visible thumb count based on container size
+  const breakpoint = containerWidth ? getBreakpoint(containerWidth) : 'xs';
+  const visibleThumbCount = containerWidth ? getVisibleThumbCount(containerWidth) : 2;
   
+  let mainBreakpoint: Breakpoint | undefined = undefined;
+  if (mainImageWidth) {
+    mainBreakpoint = getBreakpoint(mainImageWidth * 1.25);
+  }
 
-
-  // Effect to update visible thumb count on resize
-  useEffect(() => {
-    const handleResize = () => {
-      setVisibleThumbCount(getVisibleThumbCount(window.innerWidth));
-    };
-
-    // Set initial count
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); // Empty dependency array ensures this runs only on mount and cleanup
+  if (!Array.isArray(images)) {
+    return <>No Images</>;
+  }
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
@@ -131,26 +113,14 @@ export const Gallery: React.FC<GalleryProps> = ({
     };
   }, [lightboxOpen, nextImage, prevImage]);
 
-
   useEffect(() => {
     // Store all potential thumbnails (excluding the main image)
-    if (images.length > 0 ) {
+    if (images.length > 0) {
       setActualImages(images);
     } else {
       setActualImages([]);
     }
   }, [images]);
-
-  const [breakpoint, setBreakpoint] = useState<Breakpoint>(() => getBreakpoint(typeof window !== 'undefined' ? window.innerWidth : 0));
-
-  useEffect(() => {
-    const handleResize = () => setBreakpoint(getBreakpoint(window.innerWidth));
-    handleResize(); // Set initial
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-
 
   if (!images || images.length === 0) return (
     <div className="flex items-center justify-center h-full">
@@ -158,55 +128,46 @@ export const Gallery: React.FC<GalleryProps> = ({
     </div>
   );
 
-
-  
   // Slice the thumbnails based on the calculated visible count for rendering
   const visibleThumbs = actualImages.slice(1, visibleThumbCount + 1);
   const main = actualImages[0];
 
-
-
   return (
-    <div className={`Gallery w-full h-full ${className}`}>
+    <div className={`Gallery w-full h-full ${className}`} ref={containerRef}>
       <div className="flex flex-col md:flex-row h-full">
         {/* Main Image */}
-        { main && (
-            <div className="main-image xs:w-full grow-[7] md:grow-[3] xl:flex-1 md:h-full cursor-pointer" onClick={() => openLightbox(0)}
+        {main && (
+          <div 
+            className="main-image xs:w-full grow-[7] md:grow-[3] xl:flex-1 md:h-full cursor-pointer" 
+            onClick={() => openLightbox(0)}
             ref={mainImageRef}
-            >
-              {
-                mainBreakpoint ? (
-                  <ImageContainer
-                    src={pickImageSize(main, mainBreakpoint)?.src || ''}
-                    alt={main.alt ?? 'Main image'}
-                    blurDataURL={main.preview || "" }
-                    width={ main.width }
-                    height={ main.height }
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-200 animate-pulse"></div>
-              )}
-            
+          >
+            {mainBreakpoint ? (
+              <ImageContainer
+                src={pickImageSize(main, mainBreakpoint)?.src || ''}
+                alt={main.alt ?? 'Main image'}
+                blurDataURL={main.preview || ""}
+                width={main.width}
+                height={main.height}
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 animate-pulse"></div>
+            )}
           </div>
         )}
 
         {/* Thumbnails */}
         {visibleThumbs.length > 0 && (
-          
-          <div className="flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-3 lg:grid-rows-2 xl:grid-cols-2  overflow-hidden">
+          <div className="flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-3 lg:grid-rows-2 xl:grid-cols-2 overflow-hidden">
             {visibleThumbs.map((img, i) => (
-
               <div className="flex-1 h-full cursor-pointer" key={i} onClick={() => openLightbox(i + 1)}>
                 <ImageContainer
-                    src={
-                      pickImageSize(img, 'xs')?.src || ""
-                    }
-                    alt={img.alt ?? `Thumbnail ${i + 1}`}
-                    blurDataURL={ img.preview || "" }
-                    width={ img.width }
-                    height={ img.height }  
-                  />
-                
+                  src={pickImageSize(img, 'xs')?.src || ""}
+                  alt={img.alt ?? `Thumbnail ${i + 1}`}
+                  blurDataURL={img.preview || ""}
+                  width={img.width}
+                  height={img.height}
+                />
               </div>
             ))}
           </div>
@@ -216,27 +177,26 @@ export const Gallery: React.FC<GalleryProps> = ({
       {/* Lightbox */}
       {lightboxOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex flex-col gap-4 items-center justify-center z-50">
-
           <button aria-label="Close lightbox" className="absolute top-4 right-4 text-white text-2xl z-10" onClick={closeLightbox}>✕</button>
           <button aria-label="Previous image" className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10" onClick={prevImage}>❮</button>
           <button aria-label="Next image" className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10" onClick={nextImage}>❯</button>
           <div className="relative flex justify-center items-center w-[calc(100%-8rem)] h-[calc(100%-8rem)]">
             <ImageContainer
-              src={pickImageSize(images[currentIndex], breakpoint)?.src || "" }
+              src={pickImageSize(images[currentIndex], breakpoint)?.src || ""}
               alt={images[currentIndex].alt ?? 'Image'}
-              blurDataURL={ images[currentIndex].preview || "" }
+              blurDataURL={images[currentIndex].preview || ""}
               objectFit='contain'
-              width={ images[currentIndex].width }
-              height={ images[currentIndex].height }
+              width={images[currentIndex].width}
+              height={images[currentIndex].height}
             />
           </div>
 
           <footer className="w-full h-12 flex flex-col items-center justify-center gap-2 absolute bottom-2">
             {/* Caption */}
             {(images[currentIndex].caption || images[currentIndex].alt) && (
-               <div className="text-sm text-gray-200 px-4 text-center truncate">
+              <div className="text-sm text-gray-200 px-4 text-center truncate">
                 {images[currentIndex].caption || images[currentIndex].alt}
-               </div>
+              </div>
             )}
             {/* Pagination Dots */}
             <div className="pagination flex items-center justify-center gap-1.5">
@@ -250,7 +210,6 @@ export const Gallery: React.FC<GalleryProps> = ({
               ))}
             </div>
           </footer>
-
         </div>
       )}
     </div>
