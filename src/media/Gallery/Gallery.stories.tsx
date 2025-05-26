@@ -64,6 +64,69 @@ export const Default: Story = {
   ),
 };
 
+
+export const Gap: Story = {
+  args: {
+    images,
+    gap: 2
+  },
+  render: (args) => (
+    <div style={{ 
+      width: '100%', 
+      height: '100%',      
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        padding: 0,
+        boxSizing: 'border-box',
+        overflow: 'hidden'
+      }}>
+       <Gallery gap={args.gap} images={images}/>
+      </div>
+    </div>
+  ),
+};
+
+
+export const LargeGap: Story = {
+  args: {
+    images,
+    gap: 20
+  },
+  render: (args) => (
+    <div style={{ 
+      width: '100%', 
+      height: '100%',      
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        padding: 0,
+        boxSizing: 'border-box',
+        overflow: 'hidden'
+      }}>
+       <Gallery gap={args.gap} images={images}/>
+      </div>
+    </div>
+  ),
+};
+
+
 export const EmptyGallery: Story = {
   args: {
     images: [], // Fixed typo: was "image"

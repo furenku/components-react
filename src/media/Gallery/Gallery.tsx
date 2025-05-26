@@ -9,6 +9,7 @@ import { pickImageSize } from '../utils';
 interface GalleryProps {
   images: ApiImage[];
   className?: string;
+  gap?: number;
 }
 
 // Tailwind breakpoints (adjust if your config differs)
@@ -44,25 +45,19 @@ const getBreakpoint = (width: number): Breakpoint => {
 export const Gallery: React.FC<GalleryProps> = ({
   images,
   className = '',
+  gap
 }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [actualImages, setActualImages] = useState<ApiImage[]>([]);
 
-  // Use useMeasure for both container and main image
   const [containerRef, containerBounds] = useMeasure();
   const [mainImageRef, mainImageBounds] = useMeasure();
 
-  // Get dimensions from container bounds
   const containerWidth = containerBounds.width;
   const mainImageWidth = mainImageBounds.width;
 
-  useEffect(()=>{
-    console.log(
-      containerWidth, containerBounds.height
-    );
-    
-  })
+  
 
   // Calculate breakpoints and visible thumb count based on container size
   const breakpoint = containerWidth ? getBreakpoint(containerWidth) : 'xs';
@@ -133,8 +128,12 @@ export const Gallery: React.FC<GalleryProps> = ({
   const main = actualImages[0];
 
   return (
-    <div className={`Gallery flex w-full h-full ${className}`} ref={containerRef}>
-      <div className="w-full h-full flex flex-col md:flex-row ">
+    <div className={`Gallery flex w-full h-full ${className}`} ref={containerRef} style={{
+      padding: gap ? `${gap*4}px` : '0px',
+    }}>
+      <div className={`w-full h-full flex flex-col md:flex-row`} style={{
+        gap: gap ? `${gap*4}px` : '0px',
+      }}>
         {/* Main Image */}
         {main && (
           <div 
@@ -158,7 +157,9 @@ export const Gallery: React.FC<GalleryProps> = ({
 
         {/* Thumbnails */}
         {visibleThumbs.length > 0 && (
-          <div className="flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-3 lg:grid-rows-2 xl:grid-cols-2 overflow-hidden">
+          <div className={`flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-3 lg:grid-rows-2 lg:grid-cols-2 xl:grid-cols-3 overflow-hidden`} style={{
+            gap: gap ? `${gap*4}px` : '0px',
+          }}>
             {visibleThumbs.map((img, i) => (
               <div className="flex-1 h-full cursor-pointer" key={i} onClick={() => openLightbox(i + 1)}>
                 <ImageContainer
