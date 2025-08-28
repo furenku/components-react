@@ -41,8 +41,6 @@ export const Gallery = ({ images, className = '', gap }) => {
     const [mainImageRef, mainImageBounds] = useMeasure();
     const containerWidth = containerBounds.width;
     const mainImageWidth = mainImageBounds.width;
-    // Calculate breakpoints and visible thumb count based on container size
-    const breakpoint = containerWidth ? getBreakpoint(containerWidth) : 'xs';
     const visibleThumbCount = containerWidth ? getVisibleThumbCount(containerWidth) : 2;
     let mainBreakpoint = undefined;
     if (mainImageWidth) {
@@ -64,6 +62,27 @@ export const Gallery = ({ images, className = '', gap }) => {
     const prevImage = useCallback(() => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
     }, [images.length]);
+    const getLightboxImageProps = (image) => {
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        // Use 80% of viewport for significant padding
+        const maxWidth = viewportWidth * 0.8;
+        const maxHeight = viewportHeight * 0.8;
+        // Calculate the scale needed to fit the image within viewport bounds
+        const scaleX = maxWidth / image.width;
+        const scaleY = maxHeight / image.height;
+        const scale = Math.min(scaleX, scaleY, 1); // Don't upscale
+        // Calculate the actual display dimensions
+        const displayWidth = Math.round(image.width * scale);
+        const displayHeight = Math.round(image.height * scale);
+        // Get breakpoint based on display width
+        const breakpoint = getBreakpoint(displayWidth);
+        return {
+            width: displayWidth,
+            height: displayHeight,
+            breakpoint
+        };
+    };
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (lightboxOpen) {
@@ -103,6 +122,9 @@ export const Gallery = ({ images, className = '', gap }) => {
                     gap: gap ? `${gap * 4}px` : '0px',
                 }, children: [main && (_jsx("div", { className: "main-image xs:w-full grow-[7] md:grow-[3] xl:flex-1 md:h-full cursor-pointer", onClick: () => openLightbox(0), ref: mainImageRef, children: mainBreakpoint ? (_jsx(ImageContainer, { src: pickImageSize(main, mainBreakpoint)?.src || '', alt: main.alt ?? 'Main image', blurDataURL: main.preview || "", width: main.width, height: main.height })) : (_jsx("div", { className: "w-full h-full bg-gray-200 animate-pulse" })) })), visibleThumbs.length > 0 && (_jsx("div", { className: `flex grow-[3] md:grow-[2] xl:flex-1 md:grid md:grid-cols-1 md:grid-rows-3 lg:grid-rows-2 lg:grid-cols-2 xl:grid-cols-3 overflow-hidden`, style: {
                             gap: gap ? `${gap * 4}px` : '0px',
-                        }, children: visibleThumbs.map((img, i) => (_jsx("div", { className: "flex-1 h-full cursor-pointer", onClick: () => openLightbox(i + 1), children: _jsx(ImageContainer, { src: pickImageSize(img, 'xs')?.src || "", alt: img.alt ?? `Thumbnail ${i + 1}`, blurDataURL: img.preview || "", width: img.width, height: img.height }) }, i))) }))] }), lightboxOpen && (_jsxs("div", { className: "fixed inset-0 bg-black bg-opacity-90 flex flex-col gap-4 items-center justify-center z-50", children: [_jsx("button", { "aria-label": "Close lightbox", className: "absolute top-4 right-4 text-white text-2xl z-10", onClick: closeLightbox, children: "\u2715" }), _jsx("button", { "aria-label": "Previous image", className: "absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10", onClick: prevImage, children: "\u276E" }), _jsx("button", { "aria-label": "Next image", className: "absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10", onClick: nextImage, children: "\u276F" }), _jsx("div", { className: "relative flex justify-center items-center w-[calc(100%-8rem)] h-[calc(100%-8rem)]", children: _jsx(ImageContainer, { src: pickImageSize(images[currentIndex], breakpoint)?.src || "", alt: images[currentIndex].alt ?? 'Image', blurDataURL: images[currentIndex].preview || "", objectFit: 'contain', width: images[currentIndex].width, height: images[currentIndex].height }) }), _jsxs("footer", { className: "w-full h-12 flex flex-col items-center justify-center gap-2 absolute bottom-2", children: [(images[currentIndex].caption || images[currentIndex].alt) && (_jsx("div", { className: "text-sm text-gray-200 px-4 text-center truncate", children: images[currentIndex].caption || images[currentIndex].alt })), _jsx("div", { className: "pagination flex items-center justify-center gap-1.5", children: images.map((_, index) => (_jsx("button", { "aria-label": `Go to image ${index + 1}`, className: `w-2 h-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-600'} transition-colors duration-200 hover:bg-gray-400`, onClick: () => setCurrentIndex(index) }, index))) })] })] }))] }));
+                        }, children: visibleThumbs.map((img, i) => (_jsx("div", { className: "flex-1 h-full cursor-pointer", onClick: () => openLightbox(i + 1), children: _jsx(ImageContainer, { src: pickImageSize(img, 'xs')?.src || "", alt: img.alt ?? `Thumbnail ${i + 1}`, blurDataURL: img.preview || "", width: img.width, height: img.height }) }, i))) }))] }), lightboxOpen && (_jsxs("div", { className: "fixed inset-0 bg-black bg-opacity-90 flex flex-col gap-4 items-center justify-center z-50", children: [_jsx("button", { "aria-label": "Close lightbox", className: "absolute top-4 right-4 text-white text-2xl z-10", onClick: closeLightbox, children: "\u2715" }), _jsx("button", { "aria-label": "Previous image", className: "absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10", onClick: prevImage, children: "\u276E" }), _jsx("button", { "aria-label": "Next image", className: "absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10", onClick: nextImage, children: "\u276F" }), _jsx("div", { className: "relative flex justify-center items-center w-[80vw] h-[80vh] max-w-[80vw] max-h-[80vh]", children: (() => {
+                            const { width, height, breakpoint } = getLightboxImageProps(images[currentIndex]);
+                            return (_jsx(ImageContainer, { src: pickImageSize(images[currentIndex], breakpoint)?.src || "", alt: images[currentIndex].alt ?? 'Image', blurDataURL: images[currentIndex].preview || "", objectFit: 'contain', width: width, height: height }));
+                        })() }), _jsxs("footer", { className: "w-full h-12 flex flex-col items-center justify-center gap-2 absolute bottom-2", children: [(images[currentIndex].caption || images[currentIndex].alt) && (_jsx("div", { className: "text-sm text-gray-200 px-4 text-center truncate", children: images[currentIndex].caption || images[currentIndex].alt })), _jsx("div", { className: "pagination flex items-center justify-center gap-1.5", children: images.map((_, index) => (_jsx("button", { "aria-label": `Go to image ${index + 1}`, className: `w-2 h-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-600'} transition-colors duration-200 hover:bg-gray-400`, onClick: () => setCurrentIndex(index) }, index))) })] })] }))] }));
 };
 //# sourceMappingURL=Gallery.js.map

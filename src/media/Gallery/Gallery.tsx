@@ -59,8 +59,6 @@ export const Gallery: React.FC<GalleryProps> = ({
 
   
 
-  // Calculate breakpoints and visible thumb count based on container size
-  const breakpoint = containerWidth ? getBreakpoint(containerWidth) : 'xs';
   const visibleThumbCount = containerWidth ? getVisibleThumbCount(containerWidth) : 2;
   
   let mainBreakpoint: Breakpoint | undefined = undefined;
@@ -90,7 +88,7 @@ export const Gallery: React.FC<GalleryProps> = ({
   }, [images.length]);
 
 
-  const getLightboxBreakpoint = (image: ApiImage): Breakpoint => {
+  const getLightboxImageProps = (image: ApiImage) => {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
@@ -103,12 +101,20 @@ export const Gallery: React.FC<GalleryProps> = ({
     const scaleY = maxHeight / image.height;
     const scale = Math.min(scaleX, scaleY, 1); // Don't upscale
     
-    // Calculate the actual display size
-    const displayWidth = image.width * scale;
+    // Calculate the actual display dimensions
+    const displayWidth = Math.round(image.width * scale);
+    const displayHeight = Math.round(image.height * scale);
     
-    // Return breakpoint based on display width
-    return getBreakpoint(displayWidth);
+    // Get breakpoint based on display width
+    const breakpoint = getBreakpoint(displayWidth);
+    
+    return {
+      width: displayWidth,
+      height: displayHeight,
+      breakpoint
+    };
   };
+
 
 
   useEffect(() => {
@@ -204,14 +210,19 @@ export const Gallery: React.FC<GalleryProps> = ({
           <button aria-label="Previous image" className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10" onClick={prevImage}>❮</button>
           <button aria-label="Next image" className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10" onClick={nextImage}>❯</button>
           <div className="relative flex justify-center items-center w-[80vw] h-[80vh] max-w-[80vw] max-h-[80vh]">
-            <ImageContainer
-              src={pickImageSize(images[currentIndex], getLightboxBreakpoint(images[currentIndex]))?.src || ""}
-              alt={images[currentIndex].alt ?? 'Image'}
-              blurDataURL={images[currentIndex].preview || ""}
-              objectFit='contain'
-              width={images[currentIndex].width}
-              height={images[currentIndex].height}
-            />
+            {(() => {
+              const { width, height, breakpoint } = getLightboxImageProps(images[currentIndex]);
+              return (
+                <ImageContainer
+                  src={pickImageSize(images[currentIndex], breakpoint)?.src || ""}
+                  alt={images[currentIndex].alt ?? 'Image'}
+                  blurDataURL={images[currentIndex].preview || ""}
+                  objectFit='contain'
+                  width={width}
+                  height={height}
+                />
+              );
+            })()}
           </div>
 
           <footer className="w-full h-12 flex flex-col items-center justify-center gap-2 absolute bottom-2">
