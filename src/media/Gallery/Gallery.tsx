@@ -89,6 +89,28 @@ export const Gallery: React.FC<GalleryProps> = ({
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   }, [images.length]);
 
+
+  const getLightboxBreakpoint = (image: ApiImage): Breakpoint => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Use 80% of viewport for significant padding
+    const maxWidth = viewportWidth * 0.8;
+    const maxHeight = viewportHeight * 0.8;
+    
+    // Calculate the scale needed to fit the image within viewport bounds
+    const scaleX = maxWidth / image.width;
+    const scaleY = maxHeight / image.height;
+    const scale = Math.min(scaleX, scaleY, 1); // Don't upscale
+    
+    // Calculate the actual display size
+    const displayWidth = image.width * scale;
+    
+    // Return breakpoint based on display width
+    return getBreakpoint(displayWidth);
+  };
+
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (lightboxOpen) {
@@ -181,9 +203,9 @@ export const Gallery: React.FC<GalleryProps> = ({
           <button aria-label="Close lightbox" className="absolute top-4 right-4 text-white text-2xl z-10" onClick={closeLightbox}>✕</button>
           <button aria-label="Previous image" className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10" onClick={prevImage}>❮</button>
           <button aria-label="Next image" className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl z-10" onClick={nextImage}>❯</button>
-          <div className="relative flex justify-center items-center w-[calc(100%-8rem)] h-[calc(100%-8rem)]">
+          <div className="relative flex justify-center items-center w-[80vw] h-[80vh] max-w-[80vw] max-h-[80vh]">
             <ImageContainer
-              src={pickImageSize(images[currentIndex], breakpoint)?.src || ""}
+              src={pickImageSize(images[currentIndex], getLightboxBreakpoint(images[currentIndex]))?.src || ""}
               alt={images[currentIndex].alt ?? 'Image'}
               blurDataURL={images[currentIndex].preview || ""}
               objectFit='contain'
